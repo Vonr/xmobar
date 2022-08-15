@@ -1,0 +1,3 @@
+[submodule "xmobar-git"]
+	path = xmobar-git
+	url = https://codeberg.org/xmobar/xmobar

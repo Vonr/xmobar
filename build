@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+exec ~/.ghcup/bin/stack ghc \
+    -- \
+    --make xmobar.hs \
+    -i \
+    -ilib \
+    -fforce-recomp \
+    -main-is main \
+    -threaded \
+    -rtsopts \
+    -with-rtsopts \
+    -V0
+status=$?
+exit $status

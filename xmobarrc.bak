@@ -1,0 +1,40 @@
+-- Unused in favour of xmonad.hs
+Config { font            = "xft:SauceCodePro Nerd Font Mono:weight=bold:pixelsize=14:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:Mononoki:pixelsize=14:antialias=true:hinting=true"
+                           , "xft:Font Awesome 6 Free Solid:pixelsize=14"
+                           , "xft:Font Awesome 6 Brands:pixelsize=14"
+                           , "xft:Fantasque Sans Mono Nerd Font:pixelsize=14"
+                           ]
+       , bgColor      = "#282828"
+       , fgColor      = "#ebdbb2"
+       , alpha        = 150
+       -- Position TopSize and BottomSize take 3 arguments:
+       --   an alignment parameter (L/R/C) for Left, Right or Center.
+       --   an integer for the percentage width, so 100 would be 100%.
+       --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
+       , position         = TopSize C 95 22
+       , lowerOnStart     = True
+       , hideOnStart      = False
+       , allDesktops      = True
+       , persistent       = True
+       , iconRoot         = ".xmonad/xpm/"  -- default: "."
+       , overrideRedirect = False
+       , commands = [ Run Cpu ["-t", "<fn=4>\xe266</fn>  <total>%","-H","50","--high","red"] 50
+                    , Run Memory ["-t", "<fn=2>\xf233</fn> <used>M <usedratio>%"] 50
+                    , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 0
+                    , Run BatteryP ["BAT1"] ["-t", "<left>% <acstatus><watts>W <timeleft>"] 200
+                    , Run Date "<fn=4>\xf073</fn>  %a %b %d %Y %H:%M " "date" 50
+                    , Run Com "echo" ["<fn=2>\x1f50a</fn> "] "voltext" 0
+                    , Run Com "getvol" [] "vol" 20
+                    , Run Com "getmute" [] "mute" 20
+                    , Run Com "echo" ["<fn=4>\xf5dc</fn> "] "brighttext" 0
+                    , Run Com "lux" ["-G"] "bright" 20
+                    , Run Wireless "wlan0" ["-t", "<fn=4>\xf1eb</fn>  <essid> <quality>%"] 200
+                    , Run UnsafeStdinReader
+                    , Run UnsafeXMonadLog
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "   <action=`~/.xmonad/rofi-power-menu.sh`><icon=haskell_20.xpm/></action>  <fc=#55aa55><action=`xdotool key Super_L+Tab`>%UnsafeXMonadLog%</action></fc> <fc=#b8bb26><action=`xdotool key Super_L+s`>%cpu%</action></fc>  <fc=#458588><action=`xdotool key Super_L+s`>%memory%</action></fc>  <fc=#7cff7c><action=`nm-connection-editor`>%wlan0wi%</action></fc>  <fc=#ffff00><action=`xdotool key Super_L+B`>%brighttext%%bright%</action></fc> } %UnsafeStdinReader% { <fc=#00ffff><action=`xdotool key Super_L+V` button=1><action=`pavucontrol` button=3>%voltext%%vol% %mute%</action></action></fc>  <fc=#fb4934><action=`alacritty -e battop`>%baticon% %battery%</action></fc>  <fc=#83a598><action=`xdotool key Super_L+d`>%date%</action></fc>   "
+
+       }
