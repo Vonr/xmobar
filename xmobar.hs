@@ -22,7 +22,7 @@ config = defaultConfig
   , commands = myCommands
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "   " ++ action "~/.xmonad/rofi-power-menu.sh"             1 (icon "haskell_20.xpm")
+  , template = "   " ++ action "~/.xmonad/scripts/rofi-power-menu.sh"     1 (icon "haskell_20.xpm")
              ++ "  " ++ fc "55aa55" (action "xdotool key Super_L+Tab"     1 "%UnsafeXMonadLog%")
              ++ "  " ++ fc "b8bb26" (action "xdotool key Super_L+s"       1 "%cpu%")
              ++ "  " ++ fc "458588" (action "xdotool key Super_L+s"       1 "%memory%")
