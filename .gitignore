@@ -1,5 +1,4 @@
 *.o
 *.hi
-xmobar
-.stack-work/
-
+/dist/
+/dist-newstyle/
