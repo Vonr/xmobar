@@ -2,7 +2,7 @@ name:               xmobar-config
 version:            1.0.1
 homepage:           https://www.github.com/Vonr/xmobar
 category:           System
-license:            UNLICENSE
+license:            PublicDomain
 license-file:       UNLICENSE
 author:             Vonr
 maintainer:         Vonr
