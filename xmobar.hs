@@ -1,19 +1,4 @@
-import Xmobar.App.Config ( defaultConfig )
-import Xmobar.App.Main ( xmobar )
-import Xmobar.Config.Types
-    ( Align(C),
-      Config(font, additionalFonts, bgColor, fgColor, alpha, position,
-             lowerOnStart, hideOnStart, allDesktops, persistent, iconRoot,
-             overrideRedirect, commands, sepChar, alignSep, template),
-      XPosition(TopSize) )
-import Xmobar.Plugins.Command ( Command(Com) )
-import Xmobar.Plugins.Date ( Date(Date) )
-import Xmobar.Plugins.Monitors
-    ( Monitors(BatteryP, Cpu, Memory, Wireless) )
-import Xmobar.Plugins.StdinReader
-    ( StdinReader(UnsafeStdinReader) )
-import Xmobar.Plugins.XMonadLog ( XMonadLog(UnsafeXMonadLog) )
-import Xmobar.Run.Runnable ( Runnable(Run) )
+import Xmobar
 
 config :: Config
 config = defaultConfig
