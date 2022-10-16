@@ -2,3 +2,6 @@ packages: .
 
 package xmobar
   flags: +all_extensions +with_xft
+
+package xmobar-config
+  ghc-options: -j

@@ -11,7 +11,7 @@ config = defaultConfig
     ]
   , bgColor          = "#282828"
   , fgColor          = "#ebdbb2"
-  , alpha            = 150
+  , alpha            = 0
   , position         = TopSize C 95 22
   , lowerOnStart     = True
   , hideOnStart      = False
@@ -22,16 +22,16 @@ config = defaultConfig
   , commands = myCommands
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "   " ++ action "~/.xmonad/scripts/rofi-power-menu.sh"     1 (icon "haskell_20.xpm")
-             ++ "  " ++ fc "55aa55" (action "xdotool key Super_L+Tab"     1 "%UnsafeXMonadLog%")
-             ++ "  " ++ fc "b8bb26" (action "xdotool key Super_L+s"       1 "%cpu%")
-             ++ "  " ++ fc "458588" (action "xdotool key Super_L+s"       1 "%memory%")
-             ++ "  " ++ fc "7cff7c" (action "xdotool key Super_L+Shift+W" 1 "%wlan0wi%")
-             ++ "  " ++ fc "ffff00" (action "xdotool key Super_L+B"       1 "%brighttext%%bright%")
+  , template = "   " ++ cmd "~/.xmonad/scripts/rofi-power-menu.sh" 1 (icon "haskell_20.xpm")
+             ++ "  " ++ fc "34AC90" (key "Super_L+Tab"             1 "%UnsafeXMonadLog%")
+             ++ "  " ++ fc "34AC90" (key "Super_L+s"               1 "%cpu%")
+             ++ "  " ++ fc "34AC90" (key "Super_L+s"               1 "%memory%")
+             ++ "  " ++ fc "34AC90" (key "Super_L+Shift+W"         1 "%wlan0wi%")
+             ++ "  " ++ fc "34AC90" (key "Super_L+B"               1 "%brighttext%%bright%")
              ++ "  } %UnsafeStdinReader% {"
-             ++ "  " ++ fc "00ffff" (action "xdotool key Super_L+V" 1 $ action "pavucontrol" 3 "%voltext%%vol% %mute%")
-             ++ "  " ++ fc "fb4934" (action "alacritty -e battop"   1 "%battery%")
-             ++ "  " ++ fc "83a598" (action "xdotool key Super_L+d" 1 "%date%")
+             ++ "  " ++ fc "34AC90" (key "Super_L+V"               1 $ cmd "pavucontrol" 3 "%voltext%%vol% %mute%")
+             ++ "  " ++ fc "34AC90" (cmd "alacritty -e battop"     1 "%battery%")
+             ++ "  " ++ fc "34AC90" (key "Super_L+d"               1 "%date%")
   }
   where
     myCommands = [ Run UnsafeXMonadLog
@@ -64,8 +64,9 @@ config = defaultConfig
     fc :: String -> String -> String
     fc c = el "fc" ("#" ++ c) []
 
-    action :: String -> Integer -> String -> String
-    action cmd button = el "action" ("`" ++ cmd ++ "`") [("button", show button)]
+    cmd :: String -> Integer -> String -> String
+    cmd value button = el "action" ("`" ++ value ++ "`") [("button", show button)]
+    key value = cmd ("xdotool key " ++ value)
 
     icon :: String -> String
     icon i = "<icon=" ++ i ++ "/>"

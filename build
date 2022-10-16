@@ -1,15 +1,5 @@
 #!/usr/bin/bash
 
-exec ~/.ghcup/bin/stack ghc \
-    -- \
-    --make xmobar.hs \
-    -i \
-    -ilib \
-    -fforce-recomp \
-    -main-is main \
-    -threaded \
-    -rtsopts \
-    -with-rtsopts \
-    -V0
+exec ~/.ghcup/bin/cabal install . -w ghc-8.10.7 --overwrite-policy=always || exit 1
 status=$?
 exit $status
