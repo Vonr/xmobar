@@ -1,7 +1,7 @@
 import Xmobar
 
-config :: Config
-config = defaultConfig
+main :: IO ()
+main = xmobar $ defaultConfig
   { font = "xft:SauceCodePro Nerd Font Mono:weight=bold:pixelsize=14:antialias=true:hinting=true"
   , additionalFonts =
     [ "xft:Mononoki:pixelsize=14:antialias=true:hinting=true"
@@ -19,37 +19,38 @@ config = defaultConfig
   , persistent       = True
   , iconRoot         = ".xmonad/xpm/"
   , overrideRedirect = False
-  , commands = myCommands
+  , commands = [ Run UnsafeXMonadLog
+               , Run $ Cpu                        ["-t", "<total>%","-H","50","--high","red"]    20
+               , Run $ Memory                     ["-t", "<used>M <usedratio>%"]                  20
+               , Run $ Wireless         "wlan0"   ["-t", "<essid> <quality>%"]                   100
+               , Run $ Com              "lux"     ["-G"] "bright"                                                   20
+               , Run UnsafeStdinReader
+               , Run $ Com              "getvol"  [] "vol"                                                          20
+               , Run $ Com              "getmute" [] "mute"                                                         20
+               , Run $ BatteryP         ["BAT1"]  ["-t", "<left>% <acstatus><watts>W <timeleft>"] 100
+               , Run $ Date             "%a %b %d %Y %H:%M" "date"                               50
+               ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "   " ++ cmd "~/.xmonad/scripts/rofi-power-menu.sh" 1 (icon "haskell_20.xpm")
-             ++ "  " ++ fc "34AC90" (key "Super_L+Tab"             1 "%UnsafeXMonadLog%")
-             ++ "  " ++ fc "34AC90" (key "Super_L+s"               1 "%cpu%")
-             ++ "  " ++ fc "34AC90" (key "Super_L+s"               1 "%memory%")
-             ++ "  " ++ fc "34AC90" (key "Super_L+Shift+W"         1 "%wlan0wi%")
-             ++ "  " ++ fc "34AC90" (key "Super_L+B"               1 "%brighttext%%bright%")
-             ++ "  } %UnsafeStdinReader% {"
-             ++ "  " ++ fc "34AC90" (key "Super_L+V"               1 $ cmd "pavucontrol" 3 "%voltext%%vol% %mute%")
-             ++ "  " ++ fc "34AC90" (cmd "alacritty -e battop"     1 "%battery%")
-             ++ "  " ++ fc "34AC90" (key "Super_L+d"               1 "%date%")
+  , template = concatMap ("  " ++)
+             [ scr "rofi-power-menu.sh"    1 (icon "haskell_20.xpm")
+             , col $ key "Super_L+Tab"     1 "%UnsafeXMonadLog%"
+             , col $ key "Super_L+s"       1 $ nf "\xe266" ++ "  %cpu%"
+             , col $ key "Super_L+s"       1 $ nf "\xf233" ++ "  %memory%"
+             , col $ key "Super_L+Shift+W" 1 $ nf "\xf1eb" ++ "  %wlan0wi%"
+             , col $ key "Super_L+B"       1 $ nf "\xf5dc" ++ " %bright%"
+             , "} %UnsafeStdinReader% {"
+             , col $ key "Super_L+V"       1 $ cmd "pavucontrol" 3 $ nf "\xfa7d" ++ "  %vol% %mute%"
+             , col $ ter "battop"          1 $ nf "\xf242" ++ "  %battery%"
+             , col $ key "Super_L+d"       1 $ nf "\xf073" ++ "  %date%"
+             ]
   }
   where
-    myCommands = [ Run UnsafeXMonadLog
-                 , Run $ Cpu                        ["-t", "<fn=4>\xe266</fn>  <total>%","-H","50","--high","red"]    20
-                 , Run $ Memory                     ["-t", "<fn=2>\xf233</fn> <used>M <usedratio>%"]                  20
-                 , Run $ Wireless         "wlan0"   ["-t", "<fn=4>\xf1eb</fn>  <essid> <quality>%"]                   100
-                 , Run $ Com              "echo"    ["<fn=4>\xf5dc</fn>  "] "brighttext"                              0
-                 , Run $ Com              "lux"     ["-G"] "bright"                                                   20
-                 , Run UnsafeStdinReader
-                 , Run $ Com              "echo"    ["<fn=2>\x1f50a</fn> "] "voltext"                                 0
-                 , Run $ Com              "getvol"  [] "vol"                                                          20
-                 , Run $ Com              "getmute" [] "mute"                                                         20
-                 , Run $ BatteryP         ["BAT1"]  ["-t", "<fn=2>\xf242</fn> <left>% <acstatus><watts>W <timeleft>"] 100
-                 , Run $ Date             "<fn=4>\xf073</fn>  %a %b %d %Y %H:%M" "date"                               50
-                 ]
+    wrap :: [a] -> [a] -> [a] -> [a]
+    wrap bef aft mid = bef ++ mid ++ aft
 
-    wrap :: String -> String -> String -> String
-    wrap a b c = a ++ c ++ b
+    nf :: String -> String
+    nf a = "<fn=4>" ++ a ++ "</fn>"
 
     el :: String -> String -> [(String, String)] -> String -> String
     el e ev attr = wrap
@@ -64,13 +65,13 @@ config = defaultConfig
     fc :: String -> String -> String
     fc c = el "fc" ("#" ++ c) []
 
+    col = fc "34ac90"
     cmd :: String -> Integer -> String -> String
     cmd value button = el "action" ("`" ++ value ++ "`") [("button", show button)]
     key value = cmd ("xdotool key " ++ value)
+    ter value = cmd ("alacritty -e " ++ value)
+    scr script = cmd $ "~/.xmonad/scripts/" ++ script
 
     icon :: String -> String
     icon i = "<icon=" ++ i ++ "/>"
-
-main :: IO ()
-main = xmobar config
 
