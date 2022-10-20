@@ -2,13 +2,7 @@ import Xmobar
 
 main :: IO ()
 main = xmobar $ defaultConfig
-  { font = "xft:SauceCodePro Nerd Font Mono:weight=bold:pixelsize=14:antialias=true:hinting=true"
-  , additionalFonts =
-    [ "xft:Mononoki:pixelsize=14:antialias=true:hinting=true"
-    , "xft:Font Awesome 6 Free Solid:pixelsize=14"
-    , "xft:Font Awesome 6 Brands:pixelsize=14"
-    , "xft:Fantasque Sans Mono Nerd Font:pixelsize=14"
-    ]
+  { font = "FantasqueSansMono Nerd Font 12"
   , bgColor          = "#282828"
   , fgColor          = "#ebdbb2"
   , alpha            = 0
@@ -17,7 +11,7 @@ main = xmobar $ defaultConfig
   , hideOnStart      = False
   , allDesktops      = True
   , persistent       = True
-  , iconRoot         = ".xmonad/xpm/"
+  , iconRoot         = ".config/xmobar/xpm/"
   , overrideRedirect = False
   , commands = [ Run UnsafeXMonadLog
                , Run $ Cpu                        ["-t", "<total>%","-H","50","--high","red"]    20
@@ -33,24 +27,21 @@ main = xmobar $ defaultConfig
   , sepChar = "%"
   , alignSep = "}{"
   , template = concatMap ("  " ++)
-             [ scr "rofi-power-menu.sh"    1 (icon "haskell_20.xpm")
+             [ scr "rofi-power-menu.sh"    1 $ icon "haskell.xpm"
              , col $ key "Super_L+Tab"     1 "%UnsafeXMonadLog%"
-             , col $ key "Super_L+s"       1 $ nf "\xe266" ++ "  %cpu%"
-             , col $ key "Super_L+s"       1 $ nf "\xf233" ++ "  %memory%"
-             , col $ key "Super_L+Shift+W" 1 $ nf "\xf1eb" ++ "  %wlan0wi%"
-             , col $ key "Super_L+B"       1 $ nf "\xf5dc" ++ " %bright%"
+             , col $ key "Super_L+s"       1 $ icon "cpu.xpm"  ++ " %cpu%"
+             , col $ key "Super_L+s"       1 $ icon "ram.xpm"  ++ " %memory%"
+             , col $ key "Super_L+Shift+W" 1 $ icon "wifi.xpm" ++ " %wlan0wi%"
+             , col $ key "Super_L+B"       1 $ icon "bright.xpm" ++ " %bright%"
              , "} %UnsafeStdinReader% {"
-             , col $ key "Super_L+V"       1 $ cmd "pavucontrol" 3 $ nf "\xfa7d" ++ "  %vol% %mute%"
-             , col $ ter "battop"          1 $ nf "\xf242" ++ "  %battery%"
-             , col $ key "Super_L+d"       1 $ nf "\xf073" ++ "  %date%"
+             , col $ key "Super_L+V"       1 $ cmd "pavucontrol" 3 $ icon "vol.xpm" ++ " %vol% %mute%"
+             , col $ ter "battop"          1 $ icon "batt.xpm" ++ " %battery%"
+             , col $ key "Super_L+d"       1 $ icon "calendar.xpm" ++ " %date%"
              ]
   }
   where
     wrap :: [a] -> [a] -> [a] -> [a]
     wrap bef aft mid = bef ++ mid ++ aft
-
-    nf :: String -> String
-    nf a = "<fn=4>" ++ a ++ "</fn>"
 
     el :: String -> String -> [(String, String)] -> String -> String
     el e ev attr = wrap
@@ -68,10 +59,9 @@ main = xmobar $ defaultConfig
     col = fc "34ac90"
     cmd :: String -> Integer -> String -> String
     cmd value button = el "action" ("`" ++ value ++ "`") [("button", show button)]
-    key value = cmd ("xdotool key " ++ value)
-    ter value = cmd ("alacritty -e " ++ value)
+    key value  = cmd $ "xdotool key "       ++ value
+    ter value  = cmd $ "alacritty -e "      ++ value
     scr script = cmd $ "~/.xmonad/scripts/" ++ script
 
     icon :: String -> String
     icon i = "<icon=" ++ i ++ "/>"
-
