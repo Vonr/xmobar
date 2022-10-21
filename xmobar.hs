@@ -11,35 +11,39 @@ main = xmobar $ defaultConfig
   , hideOnStart      = False
   , allDesktops      = True
   , persistent       = True
-  , iconRoot         = ".config/xmobar/xpm/"
+  , iconRoot         = rel "xpm/"
   , overrideRedirect = False
   , commands = [ Run UnsafeXMonadLog
-               , Run $ Cpu                        ["-t", "<total>%","-H","50","--high","red"]    20
+               , Run $ Cpu                        ["-t", "<total>%","-H","50","--high","red"]     20
                , Run $ Memory                     ["-t", "<used>M <usedratio>%"]                  20
-               , Run $ Wireless         "wlan0"   ["-t", "<essid> <quality>%"]                   100
-               , Run $ Com              "lux"     ["-G"] "bright"                                                   20
+               , Run $ Wireless         "wlan0"   ["-t", "<essid> <quality>%"]                    100
+               , Run $ Com              "lux"     ["-G"] "bright"                                 20
                , Run UnsafeStdinReader
-               , Run $ Com              "getvol"  [] "vol"                                                          20
-               , Run $ Com              "getmute" [] "mute"                                                         20
+               , Run $ Com              getvol    [] "vol"                                        20
+               , Run $ Com              getmute   [] "mute"                                       20
                , Run $ BatteryP         ["BAT1"]  ["-t", "<left>% <acstatus><watts>W <timeleft>"] 100
-               , Run $ Date             "%a %b %d %Y %H:%M" "date"                               50
+               , Run $ Date             "%a %b %d %Y %H:%M" "date"                                50
                ]
   , sepChar = "%"
   , alignSep = "}{"
   , template = concatMap ("  " ++)
-             [ scr "rofi-power-menu.sh"    1 $ icon "haskell.xpm"
+             [ scr "rofi-power-menu.sh"    1 $ icon "haskell"
              , col $ key "Super_L+Tab"     1 "%UnsafeXMonadLog%"
-             , col $ key "Super_L+s"       1 $ icon "cpu.xpm"  ++ " %cpu%"
-             , col $ key "Super_L+s"       1 $ icon "ram.xpm"  ++ " %memory%"
-             , col $ key "Super_L+Shift+W" 1 $ icon "wifi.xpm" ++ " %wlan0wi%"
-             , col $ key "Super_L+B"       1 $ icon "bright.xpm" ++ " %bright%"
+             , col $ key "Super_L+s"       1 $ icon "cpu"  ++ " %cpu%"
+             , col $ key "Super_L+s"       1 $ icon "ram"  ++ " %memory%"
+             , col $ key "Super_L+Shift+W" 1 $ icon "wifi" ++ " %wlan0wi%"
+             , col $ key "Super_L+B"       1 $ icon "bright" ++ " %bright%"
              , "} %UnsafeStdinReader% {"
-             , col $ key "Super_L+V"       1 $ cmd "pavucontrol" 3 $ icon "vol.xpm" ++ " %vol% %mute%"
-             , col $ ter "battop"          1 $ icon "batt.xpm" ++ " %battery%"
-             , col $ key "Super_L+d"       1 $ icon "calendar.xpm" ++ " %date%"
+             , col $ key "Super_L+V"       1 $ cmd "pavucontrol" 3 $ icon "vol" ++ " %vol% %mute%"
+             , col $ ter "battop"          1 $ icon "batt" ++ " %battery%"
+             , col $ key "Super_L+d"       1 $ icon "calendar" ++ " %date%"
              ]
   }
   where
+    rel a = ".config/xmobar/" ++ a
+    getvol = rel "scripts/getvol"
+    getmute = rel "scripts/getmute"
+
     wrap :: [a] -> [a] -> [a] -> [a]
     wrap bef aft mid = bef ++ mid ++ aft
 
@@ -64,4 +68,4 @@ main = xmobar $ defaultConfig
     scr script = cmd $ "~/.xmonad/scripts/" ++ script
 
     icon :: String -> String
-    icon i = "<icon=" ++ i ++ "/>"
+    icon i = "<icon=" ++ i ++ ".xpm/>"
