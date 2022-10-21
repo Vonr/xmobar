@@ -2,7 +2,7 @@ import Xmobar
 
 main :: IO ()
 main = xmobar $ defaultConfig
-  { font = "FantasqueSansMono Nerd Font 12"
+  { font = "FantasqueSansMono Nerd Font Bold 12"
   , bgColor          = "#282828"
   , fgColor          = "#ebdbb2"
   , alpha            = 0
