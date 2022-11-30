@@ -44,7 +44,6 @@ main = xmobar $ defaultConfig
     rel a = ".config/xmobar/" ++ a
     getvol = rel "scripts/getvol"
     getmute = rel "scripts/getmute"
-    getmuteicon = rel "scripts/getmuteicon"
 
     wrap :: [a] -> [a] -> [a] -> [a]
     wrap bef aft mid = bef ++ mid ++ aft
