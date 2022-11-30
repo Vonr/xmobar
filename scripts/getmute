@@ -1,2 +1,2 @@
 #!/bin/sh
-(pactl get-sink-mute @DEFAULT_SINK@ | grep 'n' > /dev/null) && echo 'on' || echo 'off'
+(pactl get-sink-mute @DEFAULT_SINK@ | grep 'n' > /dev/null) && echo '<icon=vol.xpm/>' || echo '<icon=vol-off.xpm/>'

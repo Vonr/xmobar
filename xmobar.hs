@@ -1,4 +1,5 @@
 import Xmobar
+import Data.List.Utils (replace)
 
 main :: IO ()
 main = xmobar $ defaultConfig
@@ -27,22 +28,23 @@ main = xmobar $ defaultConfig
   , sepChar = "%"
   , alignSep = "}{"
   , template = concatMap ("  " ++)
-             [ scr "rofi-power-menu.sh"    1 $ icon "haskell"
-             , col $ key "Super_L+Tab"     1 "%UnsafeXMonadLog%"
-             , col $ key "Super_L+s"       1 $ icon "cpu"  ++ " %cpu%"
-             , col $ key "Super_L+s"       1 $ icon "ram"  ++ " %memory%"
-             , col $ key "Super_L+Shift+W" 1 $ icon "wifi" ++ " %wlan0wi%"
-             , col $ key "Super_L+B"       1 $ icon "bright" ++ " %bright%"
+             [ scr "rofi-power-menu.sh" 1 $ icon "haskell"
+             , col $ key "M-Tab"        1 "%UnsafeXMonadLog%"
+             , col $ key "M-s"          1 $ icon "cpu"  ++ " %cpu%"
+             , col $ key "M-s"          1 $ icon "ram"  ++ " %memory%"
+             , col $ key "M-S-w"        1 $ icon "wifi" ++ " %wlan0wi%"
+             , col $ key "M-S-b"        1 $ icon "bright" ++ " %bright%"
              , "} %UnsafeStdinReader% {"
-             , col $ key "Super_L+V"       1 $ cmd "pavucontrol" 3 $ icon "vol" ++ " %vol% %mute%"
-             , col $ ter "battop"          1 $ icon "batt" ++ " %battery%"
-             , col $ key "Super_L+d"       1 $ icon "calendar" ++ " %date%"
+             , col $ key "M-S-v"        1 $ cmd "pavucontrol" 3 $ "%mute% %vol%"
+             , col $ ter "battop"       1 $ icon "batt" ++ " %battery%"
+             , col $ key "M-d"          1 $ icon "calendar" ++ " %date%"
              ]
   }
   where
     rel a = ".config/xmobar/" ++ a
     getvol = rel "scripts/getvol"
     getmute = rel "scripts/getmute"
+    getmuteicon = rel "scripts/getmuteicon"
 
     wrap :: [a] -> [a] -> [a] -> [a]
     wrap bef aft mid = bef ++ mid ++ aft
@@ -63,9 +65,13 @@ main = xmobar $ defaultConfig
     col = fc "34ac90"
     cmd :: String -> Integer -> String -> String
     cmd value button = el "action" ("`" ++ value ++ "`") [("button", show button)]
-    key value  = cmd $ "xdotool key "       ++ value
     ter value  = cmd $ "alacritty -e "      ++ value
     scr script = cmd $ "~/.xmonad/scripts/" ++ script
+    key value  = cmd $ "xdotool key "       ++ replacePairs [("S", "Shift_L"), ("M", "Super_L"), ("-", "+")] value
+      where
+        replacePairs :: [(String, String)] -> String -> String
+        replacePairs [] s = s
+        replacePairs (r:rs) s = replacePairs rs $ uncurry replace r s
 
     icon :: String -> String
     icon i = "<icon=" ++ i ++ ".xpm/>"

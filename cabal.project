@@ -4,5 +4,8 @@ package xmobar
   flags: +all_extensions +with_xft
   ghc-options: -j
 
+package MissingH
+  ghc-options: -j
+
 package xmobar-config
   ghc-options: -j
