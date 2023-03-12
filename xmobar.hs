@@ -20,6 +20,7 @@ main = xmobar $ defaultConfig
                , Run $ Wireless         "wlan0"   ["-t", "<essid> <quality>%"]                    100
                , Run $ Com              "lux"     ["-G"] "bright"                                 20
                , Run UnsafeStdinReader
+               , Run $ PipeReader       "/tmp/cavabar.fifo" "cava"
                , Run $ Com              getvol    [] "vol"                                        20
                , Run $ Com              getmute   [] "mute"                                       20
                , Run $ BatteryP         ["BAT1"]  ["-t", "<left>% <acstatus><watts>W <timeleft>"] 100
@@ -28,14 +29,14 @@ main = xmobar $ defaultConfig
   , sepChar = "%"
   , alignSep = "}{"
   , template = concatMap ("  " ++)
-             [ scr "rofi-power-menu.sh" 1 $ icon "haskell"
+             [ cmd   powermenu          1 $ icon "haskell"
              , col $ key "M-Tab"        1 "%UnsafeXMonadLog%"
              , col $ key "M-s"          1 $ icon "cpu"  ++ " %cpu%"
              , col $ key "M-s"          1 $ icon "ram"  ++ " %memory%"
              , col $ key "M-S-w"        1 $ icon "wifi" ++ " %wlan0wi%"
              , col $ key "M-S-b"        1 $ icon "bright" ++ " %bright%"
              , "} %UnsafeStdinReader% {"
-             , col $ key "M-S-v"        1 $ cmd "pavucontrol" 3 $ "%mute% %vol%"
+             , col $ key "M-S-v"        1 $ cmd "pavucontrol" 3 "%cava% %mute% %vol%"
              , col $ ter "battop"       1 $ icon "batt" ++ " %battery%"
              , col $ key "M-d"          1 $ icon "calendar" ++ " %date%"
              ]
@@ -44,6 +45,7 @@ main = xmobar $ defaultConfig
     rel a = ".config/xmobar/" ++ a
     getvol = rel "scripts/getvol"
     getmute = rel "scripts/getmute"
+    powermenu = "~/.config/rofi/scripts/powermenu_t1"
 
     wrap :: [a] -> [a] -> [a] -> [a]
     wrap bef aft mid = bef ++ mid ++ aft
@@ -65,7 +67,6 @@ main = xmobar $ defaultConfig
     cmd :: String -> Integer -> String -> String
     cmd value button = el "action" ("`" ++ value ++ "`") [("button", show button)]
     ter value  = cmd $ "alacritty -e "      ++ value
-    scr script = cmd $ "~/.xmonad/scripts/" ++ script
     key value  = cmd $ "xdotool key "       ++ replacePairs [("S", "Shift_L"), ("M", "Super_L"), ("-", "+")] value
       where
         replacePairs :: [(String, String)] -> String -> String
