@@ -3,7 +3,7 @@ import Data.List.Utils (replace)
 
 main :: IO ()
 main = xmobar $ defaultConfig
-  { font = "FantasqueSansMono Nerd Font Bold 12"
+  { font = "FantasqueSansM Nerd Font Bold 12"
   , bgColor          = "#282828"
   , fgColor          = "#ebdbb2"
   , alpha            = 0

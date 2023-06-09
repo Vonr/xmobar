@@ -3,6 +3,8 @@ bars = 10
 
 [output]
 method = raw
-raw_target = /tmp/cava.fifo
-data_format = ascii
-ascii_max_range = 8
+data_format = binary
+bit_format = 8
+
+[smoothing]
+noise_reduction = 0

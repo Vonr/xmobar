@@ -1,5 +1,5 @@
 #!/usr/bin/bash
 
-exec ~/.ghcup/bin/cabal install . -w ghc-8.10.7 --overwrite-policy=always || exit 1
+clang -Os scripts/cavamap.c -o scripts/cavamap && exec ~/.ghcup/bin/cabal install . -w ghc-8.10.7 --overwrite-policy=always || exit 1
 status=$?
 exit $status

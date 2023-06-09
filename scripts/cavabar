@@ -2,22 +2,15 @@
 
 # Inspired by https://github.com/ray-pH/polybar-cava
 
-pgrep "cavabar" | grep -v "$$" | xargs -I{} kill {}
-pkill -f "cava -p /home/qther/.config/xmobar/scripts/cava_config"
-
-dict="s/;//g;s/0/ /g;s/1/▁/g;s/2/▂/g;s/3/▃/g;s/4/▄/g;s/5/▅/g;s/6/▆/g;s/7/▇/g;s/8/█/g;"
-
-# make sure to clean pipe
-pipe="/tmp/cava.fifo"
-[ -p $pipe ] || mkfifo $pipe
-
-# run cava in the background
-cava -p ~/.config/xmobar/scripts/cava_config &
+pkill -f "cava -p $HOME/.config/xmobar/scripts/cava_config"
 
 bar_pipe="/tmp/cavabar.fifo"
-[ -p $bar_pipe ] || mkfifo $bar_pipe
+if [ -p "$bar_pipe" ]; then
+    dd if="$bar_pipe" iflag=nonblock of=/dev/null
+else
+    mkfifo "$bar_pipe" || exit 1
+fi
 
-# reading data from fifo
-while read -r cmd; do
-    echo "$cmd" | sed $dict > $bar_pipe
-done < $pipe
+exec cava -p "$HOME/.config/xmobar/scripts/cava_config" \
+    | "$HOME/.config/xmobar/scripts/cavamap" 10 \
+    > "$bar_pipe"
