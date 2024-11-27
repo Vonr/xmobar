@@ -2,3 +2,4 @@
 *.hi
 /dist/
 /dist-newstyle/
+/.ccls-cache/

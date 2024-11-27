@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <locale.h>
-#include <fcntl.h>
 #include <errno.h>
 
 typedef unsigned char u8;

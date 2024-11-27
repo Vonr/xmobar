@@ -20,7 +20,7 @@ main = xmobar $ defaultConfig
                , Run $ Wireless         "wlan0"   ["-t", "<essid> <quality>%"]                    100
                , Run $ Com              "lux"     ["-G"] "bright"                                 20
                , Run UnsafeStdinReader
-               , Run $ PipeReader       "/tmp/cavabar.fifo" "cava"
+               -- , Run $ PipeReader       "/tmp/cavabar.fifo" "cava"
                , Run $ Com              getvol    [] "vol"                                        20
                , Run $ Com              getmute   [] "mute"                                       20
                , Run $ BatteryP         ["BAT1"]  ["-t", "<left>% <acstatus><watts>W <timeleft>"] 100
@@ -36,7 +36,8 @@ main = xmobar $ defaultConfig
              , col $ key "M-S-w"        1 $ icon "wifi" ++ " %wlan0wi%"
              , col $ key "M-S-b"        1 $ icon "bright" ++ " %bright%"
              , "} %UnsafeStdinReader% {"
-             , col $ key "M-S-v"        1 $ cmd "pavucontrol" 3 "%cava% %mute% %vol%"
+             -- , col $ key "M-S-v"        1 $ cmd "pavucontrol" 3 "%cava% %mute% %vol%"
+             , col $ key "M-S-v"        1 $ cmd "pavucontrol" 3 "%mute% %vol%"
              , col $ ter "battop"       1 $ icon "batt" ++ " %battery%"
              , col $ key "M-d"          1 $ icon "calendar" ++ " %date%"
              ]

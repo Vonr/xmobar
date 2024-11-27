@@ -1,6 +1,10 @@
 [general]
 bars = 10
 
+[input]
+method = pipewire
+source = auto
+
 [output]
 method = raw
 data_format = binary
@@ -8,3 +12,4 @@ bit_format = 8
 
 [smoothing]
 noise_reduction = 0
+
